@@ -111,17 +111,17 @@ FMT_3D_IMAGE = [".nii", ".nii.gz", ".nrrd"]
 TITLE = """
 <div style="text-align: center; max-width: 800px; margin: 0 auto; padding: 20px;">
     <p>
-        <img src="https://raw.githubusercontent.com/Project-MONAI/MONAI/dev/docs/images/MONAI-logo-color.png" alt="Project MONAI logo" 
+        <img src="https://busara.ai/wp-content/uploads/2025/06/busara-1-e1749187085380.png" alt="Project Busara AI logo" 
             style="width: 50%; max-width: 600px; min-width: 300px; margin: auto; display: block;">
     </p>
     
     <h1 style="font-weight: 900; font-size: 1.5rem; margin-bottom: 10px;">
-        MONAI Multi-modal Model (M3) VLM Demo
+        Busara AI Multi-modal Model (M3) Demo
     </h1>
     
     <div style="font-size: 0.95rem; text-align: left; max-width: 800px; margin: 0 auto;">
         <span>
-            VILA-M3 is a vision-language model for medical applications that interprets medical images and text prompts to generate relevant responses.
+            M3 is a vision-language model for medical applications that interprets medical images and text prompts to generate relevant responses.
         </span>
         <details style="display: inline; cursor: pointer;">
             <summary style="display: inline; font-weight: bold;">
