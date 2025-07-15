@@ -859,7 +859,7 @@ def create_demo(source, model_path, conv_mode, server_port):
             ],
         )
         demo.queue()
-        demo.launch(server_name="0.0.0.0", server_port=server_port)
+        demo.launch(server_name="0.0.0.0", server_port=8080)
 
 
 if __name__ == "__main__":
