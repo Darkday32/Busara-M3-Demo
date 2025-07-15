@@ -19,6 +19,7 @@ SHELL ["/bin/bash", "-c"]
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
 RUN git clone https://github.com/Project-MONAI/VLM --recursive
-WORKDIR /VLM
+WORKDIR /VLM/m3/demo
 RUN make demo_m3
 EXPOSE 8080
+CMD ["python", "gradio_m3.py"]
