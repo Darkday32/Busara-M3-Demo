@@ -21,3 +21,4 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN git clone https://github.com/Project-MONAI/VLM --recursive
 WORKDIR /VLM
 RUN make demo_m3
+EXPOSE 8080
