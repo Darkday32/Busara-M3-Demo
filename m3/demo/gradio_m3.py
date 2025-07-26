@@ -23,9 +23,7 @@ from zipfile import ZipFile
 import gradio as gr
 import torch
 from dotenv import load_dotenv
-from experts.expert_monai_brats import ExpertBrats
-from experts.expert_monai_vista3d import ExpertVista3D
-from experts.expert_torchxrayvision import ExpertTXRV
+from experts import ExpertBrats, ExpertVista3D, ExpertTXRV, ExpertTB
 from experts.utils import ImageCache, get_modality, get_slice_filenames, image_to_data_url, load_image
 from huggingface_hub import snapshot_download
 from llava.constants import IMAGE_TOKEN_INDEX
@@ -474,7 +472,7 @@ class M3Generator:
         # check the message mentions any expert model
         expert = None
 
-        for expert_model in [ExpertTXRV, ExpertVista3D, ExpertBrats]:
+        for expert_model in [ExpertTXRV, ExpertVista3D, ExpertBrats, ExpertTB]:
             expert = expert_model() if expert_model().mentioned_by(outputs) else None
             if expert:
                 break

@@ -12,14 +12,17 @@
         "pancreas": 4,
         "pancreatic tumor": 24
     },
-    "lung tumor": {
-        "lung": 20,
-        "lung tumor": 23,
-        "left lung upper lobe": 28,
-        "left lung lower lobe": 29,
-        "right lung upper lobe": 30,
-        "right lung middle lobe": 31,
-        "right lung lower lobe": 32
+    "Lung conditions": {
+        "TB": "expert_tb",
+        "lung tumor": {
+            "lung": 20,
+            "lung tumor": 23,
+            "left lung upper lobe": 28,
+            "left lung lower lobe": 29,
+            "right lung upper lobe": 30,
+            "right lung middle lobe": 31,
+            "right lung lower lobe": 32
+        }
     },
     "bone lesion": {
         "bone lesion": 128
