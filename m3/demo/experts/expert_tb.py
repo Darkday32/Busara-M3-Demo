@@ -1,4 +1,3 @@
-
 import os
 import torch
 import torch.nn.functional as F
@@ -54,6 +53,9 @@ class ExpertTB(BaseExpert):
             prediction[label] = probs[0][i].item()
 
         return prediction
+
+    def run(self, image_path):
+        return self.get_prediction(image_path)
 
     def mentioned_by(self, text):
         return self.expert_name in text.lower()
