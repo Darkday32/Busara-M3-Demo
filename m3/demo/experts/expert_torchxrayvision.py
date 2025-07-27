@@ -6,6 +6,7 @@ import torchxrayvision as xrv
 
 from .base_expert import BaseExpert
 from .utils import get_bbox_from_mask, get_organ_segmentation, post_process_text
+from .expert_tb import ExpertTB
 
 
 class TorchXRayVisionExpert(BaseExpert):
