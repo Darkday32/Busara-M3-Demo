@@ -9,7 +9,7 @@ from .base_expert import BaseExpert
 
 import torchxrayvision as xrv
 
-class TBExpert(BaseExpert):
+class ExpertTB(BaseExpert):
     def __init__(self, model_path="/data/checkpoints/tbtrained8b/bestmetricmodel.pth"):
         super().__init__()
         self.expert_name = "tb"
