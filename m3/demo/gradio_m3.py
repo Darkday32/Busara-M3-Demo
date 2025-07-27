@@ -23,7 +23,7 @@ from zipfile import ZipFile
 import gradio as gr
 import torch
 from dotenv import load_dotenv
-from experts import ExpertBrats, ExpertVista3D, TorchXRayVisionExpert, TBExpert
+from experts import ExpertBrats, ExpertVista3D, TorchXRayVisionExpert, ExpertTB
 from experts.utils import ImageCache, get_modality, get_slice_filenames, image_to_data_url, load_image
 from huggingface_hub import snapshot_download
 from llava.constants import IMAGE_TOKEN_INDEX
