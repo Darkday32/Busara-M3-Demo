@@ -2,6 +2,7 @@ import os
 import torch
 import torch.nn.functional as F
 import numpy as np
+import skimage.io
 import skimage.transform
 
 from .base_expert import BaseExpert
@@ -20,42 +21,39 @@ class ExpertTB(BaseExpert):
         self.model.classifier = torch.nn.Linear(1024, 2)
 
         if os.path.exists(self.model_path):
-            self.model.load_state_dict(torch.load(self.model_path))
+            self.model.load_state_dict(torch.load(self.model_path, map_location="cpu"))
         else:
             print(f"Warning: Model path does not exist: {self.model_path}")
 
         self.model.eval()
 
-    def get_expert_name(self):
+    def get_expert_name(self) -> str:
         return self.expert_name
 
-    def get_prediction(self, image_path):
+    def get_prediction(self, image_path: str) -> dict:
         img = skimage.io.imread(image_path)
         img = xrv.datasets.normalize(img, 255)
 
-        # Check if has 2 channels
         if len(img.shape) > 2:
             img = img[:, :, 0]
-        if len(img.shape) < 2:
-            print("error, dimension lower than 2 for image")
+        elif len(img.shape) < 2:
+            raise ValueError("Image dimension lower than 2")
+
         img = img[None, :, :]
 
         transform = xrv.datasets.XRayCenterCrop()
         img = transform(img)
-        img = torch.from_numpy(img).unsqueeze(0)
+        img = torch.from_numpy(img).unsqueeze(0).float()
 
         with torch.no_grad():
             outputs = self.model(img)
             probs = F.softmax(outputs, dim=1)
 
-        prediction = {}
-        for i, label in enumerate(self.labels):
-            prediction[label] = probs[0][i].item()
-
+        prediction = {label: probs[0, i].item() for i, label in enumerate(self.labels)}
         return prediction
 
-    def run(self, image_path):
+    def run(self, image_path: str) -> dict:
         return self.get_prediction(image_path)
 
-    def mentioned_by(self, text):
+    def mentioned_by(self, text: str) -> bool:
         return self.expert_name in text.lower()
