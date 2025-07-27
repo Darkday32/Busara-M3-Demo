@@ -197,6 +197,22 @@ def get_bbox_from_mask(mask: np.ndarray):
 
     return [x_min, y_min, x_max, y_max]
 
+def get_organ_segmentation(image, organ_type="lung"):
+    """
+    Dummy placeholder for organ segmentation logic.
+
+    Args:
+        image: The input image (e.g., numpy array, tensor)
+        organ_type (str): The organ to segment (e.g., "lung", "heart")
+
+    Returns:
+        mask: Binary mask (same shape as image), or dummy mask
+    """
+    if hasattr(image, "shape"):
+        return np.zeros_like(image)
+    else:
+        return None
+
 def _get_modality_text(text: str):
     """Get the modality from the text"""
     if not text:
