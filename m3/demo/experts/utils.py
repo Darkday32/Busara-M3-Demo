@@ -170,7 +170,32 @@ def _get_modality_url(image_url_or_path: str | None):
     if "cxr_" in image_url_or_path.lower():
         return "CXR"
     return "Unknown"
+    
+def get_bbox_from_mask(mask: np.ndarray):
+    """
+    Get bounding box coordinates (x_min, y_min, x_max, y_max)
+    from a binary mask.
 
+    Args:
+        mask (np.ndarray): Binary mask of shape (H, W) or (1, H, W)
+
+    Returns:
+        List[int]: Bounding box [x_min, y_min, x_max, y_max]
+    """
+    if mask.ndim == 3:
+        mask = mask[0]  # squeeze channel if needed
+
+    y_indices, x_indices = np.where(mask > 0)
+
+    if len(x_indices) == 0 or len(y_indices) == 0:
+        return [0, 0, 0, 0]  # or raise an exception
+
+    x_min = int(np.min(x_indices))
+    x_max = int(np.max(x_indices))
+    y_min = int(np.min(y_indices))
+    y_max = int(np.max(y_indices))
+
+    return [x_min, y_min, x_max, y_max]
 
 def _get_modality_text(text: str):
     """Get the modality from the text"""
