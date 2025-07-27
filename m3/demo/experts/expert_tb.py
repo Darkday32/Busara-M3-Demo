@@ -54,3 +54,6 @@ class ExpertTB(BaseExpert):
             prediction[label] = probs[0][i].item()
 
         return prediction
+
+    def mentioned_by(self, text):
+        return self.expert_name in text.lower()
