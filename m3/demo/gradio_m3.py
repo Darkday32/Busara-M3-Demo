@@ -472,8 +472,13 @@ class M3Generator:
         # check the message mentions any expert model
         expert = None
 
-        for expert_model in [TorchXRayVisionExpert, ExpertVista3D, ExpertBrats, ExpertTB]:
-            expert = expert_model() if expert_model().mentioned_by(outputs) else None
+        tb_expert = ExpertTB()
+
+        for expert_model in [TorchXRayVisionExpert, ExpertVista3D, ExpertBrats]:
+            if expert_model == TorchXRayVisionExpert:
+                expert = expert_model(tb_expert=tb_expert) if expert_model().mentioned_by(outputs) else None
+            else:
+                expert = expert_model() if expert_model().mentioned_by(outputs) else None
             if expert:
                 break
 

@@ -88,7 +88,7 @@ venv.bak/
 .vscode/
 
 # Data files
-data/
+
 
 # Logs
 *.log

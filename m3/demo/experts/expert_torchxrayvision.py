@@ -5,19 +5,18 @@ import torch
 import torchxrayvision as xrv
 
 from .base_expert import BaseExpert
-from .expert_tb import TBExpert
 from .utils import get_bbox_from_mask, get_organ_segmentation, post_process_text
 
 
 class TorchXRayVisionExpert(BaseExpert):
-    def __init__(self, device=0):
+    def __init__(self, device=0, tb_expert=None):
         super().__init__()
         self.device = f"cuda:{device}"
         self.model = xrv.models.DenseNet(weights="densenet121-res224-all")
         self.model.to(self.device)
         self.model.eval()
         self.pathologies = self.model.pathologies
-        self.tb_expert = TBExpert(device=self.device)
+        self.tb_expert = tb_expert
 
     def __call__(self, image_path, seg_image, question):
         img = xrv.utils.load_image(image_path)
