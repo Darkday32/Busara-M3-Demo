@@ -10,7 +10,7 @@ from .base_expert import BaseExpert
 import torchxrayvision as xrv
 
 class ExpertTB(BaseExpert):
-    def __init__(self, model_path="/data/checkpoints/tbtrained8b/bestmetricmodel.pth"):
+    def __init__(self, model_path="/data/checkpoints/tbtrained8b/best_metric_model.pth"):
         super().__init__()
         self.expert_name = "tb"
         self.labels = ["Normal", "TB"]
@@ -52,8 +52,30 @@ class ExpertTB(BaseExpert):
         prediction = {label: probs[0, i].item() for i, label in enumerate(self.labels)}
         return prediction
 
-    def run(self, image_path: str) -> dict:
-        return self.get_prediction(image_path)
+    def run(self, image_url=None, input=None, output_dir=None, img_file=None, slice_index=None, prompt=None):
+        """Main run method that processes the image and returns results"""
+        # Use img_file if provided, otherwise use image_url
+        image_path = img_file if img_file else image_url
+        
+        if not image_path or not os.path.exists(image_path):
+            return "Error: Image file not found for TB expert", None, ""
+        
+        try:
+            prediction = self.get_prediction(image_path)
+            tb_prob = prediction.get('TB', 0)
+            
+            if tb_prob > 0.5:
+                result_text = f"TB Detection Results:\n- TB: {tb_prob:.2f}\n- Normal: {prediction.get('Normal', 0):.2f}"
+            else:
+                result_text = f"TB Detection Results:\n- TB: {tb_prob:.2f}\n- Normal: {prediction.get('Normal', 0):.2f}\nNo significant TB findings detected."
+            
+            return result_text, None, ""
+            
+        except Exception as e:
+            return f"Error processing TB detection: {str(e)}", None, ""
 
     def mentioned_by(self, text: str) -> bool:
-        return self.expert_name in text.lower()
+        """Check if this expert should be mentioned based on the text"""
+        tb_keywords = ["tb", "tuberculosis", "lung conditions", "pulmonary"]
+        text_lower = text.lower()
+        return any(keyword in text_lower for keyword in tb_keywords)

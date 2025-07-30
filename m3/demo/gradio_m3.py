@@ -69,7 +69,7 @@ IMG_URLS_OR_PATHS = {
     "Chest X-ray Sample 2": "https://developer.download.nvidia.com/assets/Clara/monai/samples/cxr_00029943_005.jpg",
 }
 
-MODEL_CARDS = "Here is a list of available expert models:\n<BRATS(args)> Modality: MRI, Task: segmentation, Overview: A pre-trained model for volumetric (3D) segmentation of brain tumor subregions from multimodal MRIs based on BraTS 2018 data, Accuracy: Tumor core (TC): 0.8559 - Whole tumor (WT): 0.9026 - Enhancing tumor (ET): 0.7905 - Average: 0.8518, Valid args are: None\n<VISTA3D(args)> Modality: CT, Task: segmentation, Overview: domain-specialized interactive foundation model developed for segmenting and annotating human anatomies with precision, Accuracy: 127 organs: 0.792 Dice on average, Valid args are: 'everything', 'hepatic tumor', 'pancreatic tumor', 'lung tumor', 'bone lesion', 'organs', 'cardiovascular', 'gastrointestinal', 'skeleton', or 'muscles'\n<VISTA2D(args)> Modality: cell imaging, Task: segmentation, Overview: model for cell segmentation, which was trained on a variety of cell imaging outputs, including brightfield, phase-contrast, fluorescence, confocal, or electron microscopy, Accuracy: Good accuracy across several cell imaging datasets, Valid args are: None\n<CXR(args)> Modality: chest x-ray (CXR), Task: classification, Overview: pre-trained model which are trained on large cohorts of data, Accuracy: Good accuracy across several diverse chest x-rays datasets, Valid args are: None\nGive the model <NAME(args)> when selecting a suitable expert model.\n"
+MODEL_CARDS = "Here is a list of available expert models:\n<BRATS(args)> Modality: MRI, Task: segmentation, Overview: A pre-trained model for volumetric (3D) segmentation of brain tumor subregions from multimodal MRIs based on BraTS 2018 data, Accuracy: Tumor core (TC): 0.8559 - Whole tumor (WT): 0.9026 - Enhancing tumor (ET): 0.7905 - Average: 0.8518, Valid args are: None\n<VISTA3D(args)> Modality: CT, Task: segmentation, Overview: domain-specialized interactive foundation model developed for segmenting and annotating human anatomies with precision, Accuracy: 127 organs: 0.792 Dice on average, Valid args are: 'everything', 'hepatic tumor', 'pancreatic tumor', 'lung tumor', 'bone lesion', 'organs', 'cardiovascular', 'gastrointestinal', 'skeleton', or 'muscles'\n<VISTA2D(args)> Modality: cell imaging, Task: segmentation, Overview: model for cell segmentation, which was trained on a variety of cell imaging outputs, including brightfield, phase-contrast, fluorescence, confocal, or electron microscopy, Accuracy: Good accuracy across several cell imaging datasets, Valid args are: None\n<CXR(args)> Modality: chest x-ray (CXR), Task: classification, Overview: pre-trained model which are trained on large cohorts of data, Accuracy: Good accuracy across several diverse chest x-rays datasets, Valid args are: None\n<TB(args)> Modality: chest x-ray (CXR), Task: classification, Overview: specialized model for detecting tuberculosis in chest x-rays, Accuracy: High accuracy for TB detection, Valid args are: None\nGive the model <NAME(args)> when selecting a suitable expert model.\n"
 
 SYS_PROMPT = None  # set when the script initializes
 
@@ -96,6 +96,8 @@ EXAMPLE_PROMPTS_2D = [
     ["Is the atelectasis located on the left side or right side?"],
     ["What level is the cardiomegaly?"],
     ["Describe the image in detail"],
+    ["Is there evidence of tuberculosis in this image?"],
+    ["Check for TB in this chest x-ray"],
 ]
 
 HTML_PLACEHOLDER = "<br>".join([""] * 15)
@@ -474,13 +476,19 @@ class M3Generator:
 
         tb_expert = ExpertTB()
 
-        for expert_model in [TorchXRayVisionExpert, ExpertVista3D, ExpertBrats]:
-            if expert_model == TorchXRayVisionExpert:
-                expert = expert_model(tb_expert=tb_expert) if expert_model().mentioned_by(outputs) else None
-            else:
-                expert = expert_model() if expert_model().mentioned_by(outputs) else None
-            if expert:
-                break
+        # Check if TB expert is mentioned specifically
+        if tb_expert.mentioned_by(outputs):
+            # If TB is mentioned, use TorchXRayVisionExpert with TB expert
+            expert = TorchXRayVisionExpert(tb_expert=tb_expert)
+        else:
+            # Check other experts
+            for expert_model in [TorchXRayVisionExpert, ExpertVista3D, ExpertBrats]:
+                if expert_model == TorchXRayVisionExpert:
+                    expert = expert_model(tb_expert=tb_expert) if expert_model().mentioned_by(outputs) else None
+                else:
+                    expert = expert_model() if expert_model().mentioned_by(outputs) else None
+                if expert:
+                    break
 
         if expert:
             logger.debug(f"Expert model {expert.__class__.__name__} is being called to process {sv.image_url}.")

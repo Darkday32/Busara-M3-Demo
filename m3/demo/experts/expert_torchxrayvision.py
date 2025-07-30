@@ -53,11 +53,16 @@ class TorchXRayVisionExpert(BaseExpert):
             # Get TB predictions if TB expert is available
             if self.tb_expert:
                 try:
-                    tb_result = self.tb_expert.run(image_path)
-                    if isinstance(tb_result, dict):
-                        tb_prob = tb_result.get('TB', 0)
-                        if tb_prob > 0.5:
-                            findings.append(f"TB ({tb_prob:.2f})")
+                    tb_result_text, _, _ = self.tb_expert.run(image_url=image_path)
+                    # Parse the TB result to extract probability
+                    if "TB:" in tb_result_text:
+                        # Extract TB probability from the result text
+                        import re
+                        tb_match = re.search(r'TB: ([0-9.]+)', tb_result_text)
+                        if tb_match:
+                            tb_prob = float(tb_match.group(1))
+                            if tb_prob > 0.5:
+                                findings.append(f"TB ({tb_prob:.2f})")
                 except Exception as e:
                     print(f"TB expert error: {e}")
             
@@ -100,10 +105,16 @@ class TorchXRayVisionExpert(BaseExpert):
             # Get TB findings if available
             if self.tb_expert:
                 try:
-                    tb_findings = self.tb_expert.run(image_path)
-                    if isinstance(tb_findings, dict):
-                        tb_labels = [label for label, prob in tb_findings.items() if prob > 0.5 and label != "Normal"]
-                        findings.extend(tb_labels)
+                    tb_result_text, _, _ = self.tb_expert.run(image_url=image_path)
+                    # Parse the TB result to extract probability
+                    if "TB:" in tb_result_text:
+                        # Extract TB probability from the result text
+                        import re
+                        tb_match = re.search(r'TB: ([0-9.]+)', tb_result_text)
+                        if tb_match:
+                            tb_prob = float(tb_match.group(1))
+                            if tb_prob > 0.5:
+                                findings.append("TB")
                 except Exception as e:
                     print(f"TB expert error: {e}")
             
