@@ -6,12 +6,12 @@ import skimage.io
 import skimage.transform
 import requests
 
-from .base_expert import BaseExpert
+from experts.base_expert import BaseExpert
 
 import torchxrayvision as xrv
 
 class ExpertTB(BaseExpert):
-    def __init__(self, model_path="/data/checkpoints/tbtrained8b/best_metric_model.pth"):
+    def __init__(self, model_path="/root/Busara-M3-Demo/m3/demo/data/checkpoints/tbtrained8b/best_metric_model.pth"):
         super().__init__()
         self.expert_name = "tb"
         self.labels = ["Normal", "TB"]
