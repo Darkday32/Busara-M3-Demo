@@ -19,8 +19,8 @@ from shutil import move
 from uuid import uuid4
 
 import requests
-from m3.demo.experts.base_expert import BaseExpert
-from m3.demo.experts.utils import get_monai_transforms, get_slice_filenames
+from experts.base_expert import BaseExpert
+from experts.utils import get_monai_transforms, get_slice_filenames
 from monai.bundle import create_workflow
 
 

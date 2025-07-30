@@ -5,7 +5,7 @@ import numpy as np
 import skimage.io
 import skimage.transform
 
-from m3.demo.experts.base_expert import BaseExpert
+from experts.base_expert import BaseExpert
 
 import torchxrayvision as xrv
 
