@@ -6,7 +6,7 @@ import skimage.io
 import skimage.transform
 import requests
 
-from experts.base_expert import BaseExpert
+from .base_expert import BaseExpert
 
 import torchxrayvision as xrv
 

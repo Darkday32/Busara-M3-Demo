@@ -2,9 +2,9 @@ import os
 import numpy as np
 import torch
 import torchxrayvision as xrv
-from experts.base_expert import BaseExpert
-from experts.utils import get_bbox_from_mask, get_organ_segmentation, post_process_text
-from experts.expert_tb import ExpertTB
+from .base_expert import BaseExpert
+from .utils import get_bbox_from_mask, get_organ_segmentation, post_process_text
+from .expert_tb import ExpertTB
 
 class TorchXRayVisionExpert(BaseExpert):
     def __init__(self, device=0, tb_expert=None):
