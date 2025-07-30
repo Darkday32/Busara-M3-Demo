@@ -4,6 +4,7 @@ import torch.nn.functional as F
 import numpy as np
 import skimage.io
 import skimage.transform
+import requests
 
 from experts.base_expert import BaseExpert
 
