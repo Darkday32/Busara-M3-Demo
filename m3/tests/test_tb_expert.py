@@ -7,7 +7,7 @@ import tempfile
 load_dotenv()
 import os
 
-sys.path.append("m3/demo/experts")
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "demo", "experts"))
 
 from expert_tb import ExpertTB
 from utils import save_image_url_to_file
