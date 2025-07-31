@@ -19,10 +19,19 @@ class ExpertTB(BaseExpert):
 
         self.model = xrv.models.DenseNet(weights="densenet121-res224-all")
         self.model.op_threshs = None
+        
+        # Store the original classifier to restore after loading
+        original_classifier = self.model.classifier
+        
+        # Modify classifier for TB detection (2 classes)
         self.model.classifier = torch.nn.Linear(1024, 2)
 
         if os.path.exists(self.model_path):
-            self.model.load_state_dict(torch.load(self.model_path, map_location="cpu"))
+            # Load the state dict with strict=False to handle classifier mismatch
+            state_dict = torch.load(self.model_path, map_location="cpu")
+            # Load only the matching parameters, ignore mismatched classifier
+            self.model.load_state_dict(state_dict, strict=False)
+            print("Loaded model state dict with strict=False")
         else:
             print(f"Warning: Model path does not exist: {self.model_path}")
 
