@@ -9,7 +9,13 @@ from .expert_tb import ExpertTB
 class TorchXRayVisionExpert(BaseExpert):
     def __init__(self, device=0, tb_expert=None):
         super().__init__()
-        self.device = f"cuda:{device}"
+        # Check if CUDA is available, otherwise use CPU
+        if torch.cuda.is_available():
+            self.device = f"cuda:{device}"
+        else:
+            self.device = "cpu"
+            print("CUDA not available, using CPU for TorchXRayVisionExpert")
+        
         self.model = xrv.models.DenseNet(weights="densenet121-res224-all")
         self.model.to(self.device)
         self.model.eval()
@@ -61,8 +67,7 @@ class TorchXRayVisionExpert(BaseExpert):
                         tb_match = re.search(r'TB: ([0-9.]+)', tb_result_text)
                         if tb_match:
                             tb_prob = float(tb_match.group(1))
-                            if tb_prob > 0.5:
-                                findings.append(f"TB ({tb_prob:.2f})")
+                            findings.append(f"TB ({tb_prob:.2f})")  # Always include TB if detected, regardless of threshold
                 except Exception as e:
                     print(f"TB expert error: {e}")
             
@@ -113,8 +118,7 @@ class TorchXRayVisionExpert(BaseExpert):
                         tb_match = re.search(r'TB: ([0-9.]+)', tb_result_text)
                         if tb_match:
                             tb_prob = float(tb_match.group(1))
-                            if tb_prob > 0.5:
-                                findings.append("TB")
+                            findings.append("TB")  # Always include TB if detected, regardless of threshold
                 except Exception as e:
                     print(f"TB expert error: {e}")
             
